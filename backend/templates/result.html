@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <header>
+        <h1>📊 Analysis Result</h1>
+    </header>
+    <div class="container">
+        <h2>Risk Assessment</h2>
+
+        <div class="result-box">
+            <h3 style="margin-top:0;">Analysis Report</h3>
+            <p><strong>File:</strong> {{ filename }}</p>
+            <p><strong>Risk Prediction:</strong>
+                <span class="{{ 'risk-high' if risk_score > 0.5 else 'risk-low' }}">
+                    {{ 'High Risk' if risk_score > 0.5 else 'Low Risk' }}
+                </span>
+            </p>
+            <p><strong>Probability:</strong> {{ (risk_score * 100)|round(2) }}%</p>
+        </div>
+
+        <h3>Extracted Metrics</h3>
+        <div class="metrics-grid">
+            {% for key, value in metrics.items() %}
+            <div class="metric-card">
+                <span class="metric-label">{{ key|replace('_', ' ')|title }}</span>
+                <span class="metric-value">{{ value|round(2) if value is number else value }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="/" style="text-decoration: none;">
+                <button type="button" style="width: auto; padding: 15px 40px;">🔙 Analyze Another File</button>
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>

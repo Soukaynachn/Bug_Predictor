@@ -1,0 +1,8 @@
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+.env
+*.log
+debug_*.py
+verify_logic.py

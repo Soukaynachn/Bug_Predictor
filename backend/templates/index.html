@@ -45,6 +45,9 @@
                 <button class="tab-btn" onclick="switchTab('paste')">
                     <i class="fa-solid fa-paste"></i> Paste Code
                 </button>
+                <button class="tab-btn" onclick="switchTab('repo')">
+                    <i class="fa-brands fa-github"></i> Git Repo
+                </button>
             </div>
 
             <div class="tab-content" id="upload-tab">
@@ -77,11 +80,24 @@
                     </button>
                 </form>
             </div>
+
+            <div class="tab-content hidden" id="repo-tab">
+                <form id="repo-form" onsubmit="handleAnalysis(event, '/analyze_repo')">
+                    <div class="textarea-wrapper" style="min-height: auto;">
+                        <input type="url" name="repo_url" id="repo-url" class="repo-input"
+                            placeholder="https://github.com/username/repository.git" required
+                            style="width: 100%; padding: 1rem; border: 1px solid var(--border-color); border-radius: 0.5rem; margin-bottom: 1rem;">
+                    </div>
+                    <button type="submit" class="cta-button">
+                        <i class="fa-brands fa-github"></i> Analyze Repository
+                    </button>
+                </form>
+            </div>
         </div>
     </main>
 
     <footer>
-        <p>&copy; 2025 Bug Predictor . All rights reserved.</p>
+        <p>&copy; 2025 Bug Predictor. All rights reserved.</p>
     </footer>
 
     <script>
@@ -93,9 +109,12 @@
             if (tab === 'upload') {
                 document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
                 document.getElementById('upload-tab').classList.remove('hidden');
-            } else {
+            } else if (tab === 'paste') {
                 document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
                 document.getElementById('paste-tab').classList.remove('hidden');
+            } else {
+                document.querySelector('.tab-btn:nth-child(3)').classList.add('active');
+                document.getElementById('repo-tab').classList.remove('hidden');
             }
         }
 

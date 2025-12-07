@@ -226,5 +226,111 @@ def predict_and_render(features, filename):
                             risk_score=risk_score, 
                             metrics=features)
 
+import tempfile
+import shutil
+import uuid
+import git
+
+@app.route('/analyze_repo', methods=['POST'])
+def analyze_repo():
+    repo_url = request.form.get('repo_url')
+    if not repo_url:
+        return jsonify({'error': 'Please provide a Git Repository URL.'}), 400
+    
+    # Create temp directory
+    temp_dir = os.path.join(tempfile.gettempdir(), f'repo_{uuid.uuid4()}')
+    
+    results = []
+    
+    try:
+        # Clone repo
+        print(f"Cloning {repo_url} into {temp_dir}...")
+        git.Repo.clone_from(repo_url, temp_dir, depth=1)
+        
+        # Iterate files
+        for root, dirs, files in os.walk(temp_dir):
+            # Skip .git directory
+            if '.git' in dirs:
+                dirs.remove('.git')
+                
+            for file in files:
+                if allowed_file(file):
+                    file_path = os.path.join(root, file)
+                    rel_path = os.path.relpath(file_path, temp_dir)
+                    
+                    try:
+                        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                            content = f.read()
+                            
+                        # Validate content (similar to single file)
+                        if not content.strip() or (len(content.strip()) < 10):
+                            continue # Skip empty/dummy files
+                            
+                        # Basic heuristics checks (optional here, or assume repo code is somewhat valid)
+                         
+                        features = feature_extractor.extract_from_code(content, file)
+                        
+                        if not features or (features.get('loc', 0) == 0):
+                            continue
+
+                        # Reuse prediction logic (refactor if strictly needed, but duplicating small block is safer for now to avoid breaking existing flow)
+                        import pandas as pd
+                         # ... Use strict logic ...
+                        risk_score = 0.5 # default
+                        
+                        # --- Prediction Logic Start (Condensed) ---
+                        if TRAINED_FEATURE_NAMES and model_trainer.model:
+                            feature_vector = {}
+                            for feat_name in TRAINED_FEATURE_NAMES:
+                                if feat_name == 'loc': feature_vector[feat_name] = features.get('loc', 0)
+                                elif feat_name == 'v(g)': feature_vector[feat_name] = features.get('cyclomatic_complexity', 0)
+                                elif feat_name == 'n': feature_vector[feat_name] = features.get('halstead_volume', 0)
+                                elif feat_name == 'lOCode': feature_vector[feat_name] = features.get('sloc', 0)
+                                elif feat_name == 'complexity_per_loc':
+                                     feature_vector[feat_name] = features.get('cyclomatic_complexity', 0) / (features.get('loc', 1) + 1)
+                                else:
+                                     feature_vector[feat_name] = FEATURE_MEANS.get(feat_name, 0)
+                            
+                            X_pred = pd.DataFrame([feature_vector], columns=TRAINED_FEATURE_NAMES)
+                            ml_score = model_trainer.model.predict_proba(X_pred)[0][1]
+                            
+                            # Simple heuristic boost
+                            heuristic_score = 0
+                            if features.get('loc',0) > 100: heuristic_score += 0.2
+                            if features.get('cyclomatic_complexity',0) > 5: heuristic_score += 0.3
+                            heuristic_score = min(1.0, heuristic_score)
+
+                            risk_score = 0.7 * ml_score + 0.3 * heuristic_score
+                        # --- Prediction Logic End ---
+                        
+                        results.append({
+                            'filename': rel_path,
+                            'risk_score': round(risk_score, 4),
+                            'metrics': features,
+                            'risk_label': 'High' if risk_score > 0.5 else 'Low'
+                        })
+                        
+                    except Exception as e:
+                        print(f"Skipping file {rel_path}: {e}")
+                        continue
+
+    except Exception as e:
+        return jsonify({'error': f'Failed to analyze repository: {str(e)}'}), 500
+    finally:
+        # Cleanup
+        if os.path.exists(temp_dir):
+            try:
+                shutil.rmtree(temp_dir)
+            except:
+                pass 
+    
+    # Sort by risk descending
+    results.sort(key=lambda x: x['risk_score'], reverse=True)
+    
+    return render_template('repo_result.html', 
+                          repo_url=repo_url,
+                          results=results,
+                          file_count=len(results))
+
 if __name__ == '__main__':
     app.run(debug=True)

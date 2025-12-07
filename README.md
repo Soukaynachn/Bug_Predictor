@@ -218,6 +218,3 @@ Bug_Predictor/
 
 ---
 
-
-
-**Happy Coding! 🚀**

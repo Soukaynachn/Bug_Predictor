@@ -119,13 +119,6 @@ Perfect for analyzing individual source code files.
 4. Click **"Analyze File"** button
 5. View detailed risk analysis and recommendations
 
-**Example:**
-```
-✅ Upload: calculator.py
-🔍 Analysis: Cyclomatic Complexity: 8, LOC: 150
-⚠️ Risk Level: MEDIUM - Consider refactoring complex functions
-```
-
 ---
 
 ### Method 2: 📝 Paste Code

@@ -71,7 +71,7 @@ Bug Predictor analyzes your code through three stages:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/Bug_Predictor.git
+   git clone https://github.com/Soukaynachn/Bug_Predictor.git
    cd Bug_Predictor
    ```
 
@@ -155,22 +155,7 @@ Comprehensive analysis for entire projects.
 4. Wait for the analysis to complete (may take a few minutes for large repos)
 5. Review the comprehensive report with file-by-file risk assessment
 
-**Features:**
-- Analyzes all supported files in the repository
-- Ranks files by risk level
-- Identifies hotspots requiring immediate attention
-- Generates downloadable reports
 
-**Example:**
-```
-Repository: https://github.com/example/project
-Files Analyzed: 47
-High Risk: 3 files
-Medium Risk: 12 files
-Low Risk: 32 files
-```
-
----
 
 ## 🌐 Supported Languages
 
@@ -232,29 +217,6 @@ Bug_Predictor/
 
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 👥 Authors
-
-**Soukaina** - *Initial work* - Module: Génie Logiciel
-
----
 
 ## 🙏 Acknowledgments
 
@@ -264,8 +226,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 📞 Support
 
-For questions or issues, please open an issue on GitHub or contact the development team.
 
 **Happy Coding! 🚀**

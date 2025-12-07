@@ -20,7 +20,6 @@ Bug Predictor is an intelligent web application that leverages Machine Learning 
 - [Supported Languages](#-supported-languages)
 - [Technical Details](#-technical-details)
 - [Project Structure](#-project-structure)
-- [Contributing](#-contributing)
 
 ---
 
